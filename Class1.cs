@@ -1,10 +1,6 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.Logging;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Cursor = UnityEngine.Cursor;
-using Object = System.Object;
 
 namespace AtlyssUIShortcuts
 {
@@ -12,6 +8,7 @@ namespace AtlyssUIShortcuts
     public class AtlyssUIShortcuts : BaseUnityPlugin
     {
         internal new static ManualLogSource Logger { get; private set; } = null;
+        public static bool unlockedByUs = false;
 
         private void Awake()
         {
@@ -23,7 +20,28 @@ namespace AtlyssUIShortcuts
 
         private void Update()
         {
-            //Logger.Log(LogLevel.Message, Cursor.lockState);
+            if (Player._mainPlayer == null) return;
+            if (Player._mainPlayer._currentGameCondition != GameCondition.IN_GAME) return;
+            if (CameraFunction._current == null) return;
+
+            if (unlockedByUs && CameraFunction._current._unlockedCamera != true)
+            {
+                Logger.Log(LogLevel.Message, "unlocking because we were forced to");
+                unlockedByUs = false;
+            }
+            
+            if (Input.GetKeyDown(KeyCode.LeftAlt) && CameraFunction._current._unlockedCamera == false)
+            {
+                Logger.Log(LogLevel.Message, "KeyDownEvent: LeftAlt");
+                CameraFunction._current._unlockedCamera = true;
+                unlockedByUs = true;
+            } else if (Input.GetKeyUp(KeyCode.LeftAlt) && unlockedByUs)
+            {
+                Logger.Log(LogLevel.Message, "KeyUpEvent: LeftAlt");
+                CameraFunction._current._unlockedCamera = false;
+                unlockedByUs = false;
+            }
+
             if (AtlyssNetworkManager._current == null || PartyUIManager._current == null) return;
             if (AtlyssNetworkManager._current._soloMode) return;
             if (PartyUIManager._current._partyObject != null) return;
