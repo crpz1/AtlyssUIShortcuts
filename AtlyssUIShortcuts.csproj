@@ -7,11 +7,11 @@
     <ProjectGuid>{66FA1810-9987-4B06-AEEE-7ED34ABE5E0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AtlyssItemTweaks</RootNamespace>
-    <AssemblyName>AtlyssItemTweaks</AssemblyName>
+    <RootNamespace>AtlyssUIShortcuts</RootNamespace>
+    <AssemblyName>AtlyssUIShortcuts</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <Deterministic>false</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile>
