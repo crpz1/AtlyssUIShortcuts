@@ -7,11 +7,11 @@
     <ProjectGuid>{66FA1810-9987-4B06-AEEE-7ED34ABE5E0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AtlyssUIShortcuts</RootNamespace>
-    <AssemblyName>AtlyssUIShortcuts</AssemblyName>
+    <RootNamespace>AtlyssItemTweaks</RootNamespace>
+    <AssemblyName>AtlyssItemTweaks</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>false</Deterministic>
+    <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile>
@@ -290,5 +290,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\BepInEx.Core.5.4.20\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BepInEx.Core.5.4.20\build\BepInEx.Core.targets'))" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="del /q $(OutDir)\AtlyssUIShortcuts.zip" />
+	  <Exec Command="tar -acf $(OutDir)AtlyssUIShortcuts.zip icon.png manifest.json LICENSE README.md -C $(OutDir) $(TargetFileName) " />
   </Target>
 </Project>
