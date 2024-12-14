@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlyssItemTweaks", "AtlyssItemTweaks.csproj", "{66FA1810-9987-4B06-AEEE-7ED34ABE5E0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtlyssUIShortcuts", "AtlyssUIShortcuts.csproj", "{66FA1810-9987-4B06-AEEE-7ED34ABE5E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
