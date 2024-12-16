@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AtlyssUIShortcuts
 {
-    [BepInPlugin("crpz.AtlyssUIShortcuts", "AtlyssUIShortcuts", "1.0.0")]
+    [BepInPlugin("crpz.AtlyssUIShortcuts", "AtlyssUIShortcuts", "1.1.0")]
     public class AtlyssUIShortcuts : BaseUnityPlugin
     {
         internal new static ManualLogSource Logger { get; private set; } = null;
@@ -42,6 +42,8 @@ namespace AtlyssUIShortcuts
                 unlockedByUs = false;
             }
 
+            HandleWorldPortalScroll();
+
             if (AtlyssNetworkManager._current == null || PartyUIManager._current == null) return;
             if (AtlyssNetworkManager._current._soloMode) return;
             if (PartyUIManager._current._partyObject != null) return;
@@ -49,6 +51,26 @@ namespace AtlyssUIShortcuts
             if (Input.GetKeyDown(KeyCode.Y)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.ACCEPTED);
             if (Input.GetKeyDown(KeyCode.N)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.DECLINED);
 
+        }
+
+        private void HandleWorldPortalScroll()
+        {
+            if (ZoneSelectionManager._current == null) return;
+            ZoneSelectionManager zsm = ZoneSelectionManager._current;
+            if (!zsm._isOpen) return;
+
+            if (Input.mouseScrollDelta.y < 0)
+            {
+                int nextIndex = zsm._worldPortal._selectedPortalEntry + 1;
+                if (nextIndex > zsm._worldPortal._worldPortalSlots.Length - 1) return;
+                if (!Player._mainPlayer._waypointAttunements.Contains(zsm._worldPortal._worldPortalSlots[nextIndex]
+                        ._mapLockID)) return;
+                zsm._zoneSelectPrefabs[nextIndex].GetComponent<ZoneSelectionEntry>().Select_Entry();
+            } else if (Input.mouseScrollDelta.y > 0)
+            {
+                if (zsm._worldPortal._selectedPortalEntry == 0) return;
+                zsm._zoneSelectPrefabs[zsm._worldPortal._selectedPortalEntry - 1].GetComponent<ZoneSelectionEntry>().Select_Entry();
+            }
         }
     }
 }
