@@ -1,20 +1,40 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace AtlyssUIShortcuts
 {
     [BepInPlugin("crpz.AtlyssUIShortcuts", "AtlyssUIShortcuts", "1.1.0")]
+    [BepInDependency("EasySettings", BepInDependency.DependencyFlags.SoftDependency)]
     public class AtlyssUIShortcuts : BaseUnityPlugin
     {
         internal new static ManualLogSource Logger { get; private set; } = null;
+
+        internal static ConfigEntry<bool> UnlockCursorConfig;
+        internal static ConfigEntry<bool> InviteConfig;
+        internal static ConfigEntry<bool> WorldPortalScrollConfig;
+        internal static ConfigEntry<KeyCode> UnlockCursorBind;
+        internal static ConfigEntry<KeyCode> InviteAcceptBind;
+        internal static ConfigEntry<KeyCode> InviteDeclineBind;
+
         public static bool unlockedByUs = false;
+        [CanBeNull] internal static AtlyssUIShortcuts instance;
 
         private void Awake()
         {
             Logger = base.Logger;
             //Harmony = new Harmony("crpz.AtlyssUIShortcuts");
             //Harmony.PatchAll();
+            InitConfig();
+            instance = this;
+
+            if (EasySettingsCompat.enabled)
+            {
+                EasySettingsCompat.SetupSettings();
+            }
+
             Logger.Log(LogLevel.Message, "hii :3");
         }
 
@@ -71,6 +91,33 @@ namespace AtlyssUIShortcuts
                 if (zsm._worldPortal._selectedPortalEntry == 0) return;
                 zsm._zoneSelectPrefabs[zsm._worldPortal._selectedPortalEntry - 1].GetComponent<ZoneSelectionEntry>().Select_Entry();
             }
+        }
+
+        private void InitConfig()
+        {
+            ConfigDefinition unlockCursorToggleDefinition = new ConfigDefinition("Features", "UnlockCursorEnabled");
+            ConfigDescription unlockCursorToggleDescription = new ConfigDescription("Decline Invite");
+            UnlockCursorConfig = Config.Bind(unlockCursorToggleDefinition, true, unlockCursorToggleDescription);
+
+            ConfigDefinition inviteToggleDefinition = new ConfigDefinition("Features", "InviteBindEnable");
+            ConfigDescription inviteToggleDescription = new ConfigDescription("Decline Invite");
+            InviteConfig = Config.Bind(inviteToggleDefinition, true, inviteToggleDescription);
+
+            ConfigDefinition worldPortalScrollDefinition = new ConfigDefinition("Features", "WorldPortalScrollEnabled");
+            ConfigDescription worldPortalScrollDescription = new ConfigDescription("Decline Invite");
+            WorldPortalScrollConfig = Config.Bind(worldPortalScrollDefinition, true, worldPortalScrollDescription);
+
+            ConfigDefinition unlockCursorDefinition = new ConfigDefinition("Keybinds", "UnlockCursorKeybind");
+            ConfigDescription unlockCursorDescription = new ConfigDescription("Unlock Mouse");
+            UnlockCursorBind = Config.Bind(unlockCursorDefinition, KeyCode.LeftAlt, unlockCursorDescription);
+
+            ConfigDefinition inviteAcceptDefinition = new ConfigDefinition("Keybinds", "InviteAcceptKeybind");
+            ConfigDescription inviteAcceptDescription = new ConfigDescription("Accept Invite");
+            InviteAcceptBind = Config.Bind(inviteAcceptDefinition, KeyCode.Y, inviteAcceptDescription);
+
+            ConfigDefinition inviteDeclineDefinition = new ConfigDefinition("Keybinds", "InviteDeclineKeybind");
+            ConfigDescription inviteDeclineDescription = new ConfigDescription("Decline Invite");
+            InviteDeclineBind = Config.Bind(inviteDeclineDefinition, KeyCode.N, inviteDeclineDescription);
         }
     }
 }

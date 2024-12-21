@@ -46,6 +46,9 @@
     <Reference Include="BepInEx, Version=5.4.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\BepInEx.BaseLib.5.4.20\lib\net35\BepInEx.dll</HintPath>
     </Reference>
+    <Reference Include="EasySettings">
+      <HintPath>..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\ATLYSS\profiles\Default\BepInEx\plugins\Nessie-EasySettings\EasySettings.dll</HintPath>
+    </Reference>
     <Reference Include="Mirror">
       <HintPath>D:\SteamLibrary\steamapps\common\ATLYSS\ATLYSS_Data\Managed\Mirror.dll</HintPath>
     </Reference>
@@ -274,6 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="EasySettingsCompat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -292,7 +296,7 @@
     <Error Condition="!Exists('packages\BepInEx.Core.5.4.20\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BepInEx.Core.5.4.20\build\BepInEx.Core.targets'))" />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="del /q $(OutDir)\AtlyssUIShortcuts.zip" />
-	  <Exec Command="tar -acf $(OutDir)AtlyssUIShortcuts.zip icon.png manifest.json LICENSE README.md -C $(OutDir) $(TargetFileName) " />
+    <Exec Command="del /q $(OutDir)\AtlyssUIShortcuts.zip" />
+    <Exec Command="tar -acf $(OutDir)AtlyssUIShortcuts.zip icon.png manifest.json LICENSE README.md -C $(OutDir) $(TargetFileName) " />
   </Target>
 </Project>
