@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 
 namespace AtlyssUIShortcuts
@@ -56,14 +57,14 @@ namespace AtlyssUIShortcuts
                 if (Input.GetKeyDown(UnlockCursorBind.Value) && CameraFunction._current._unlockedCamera == false)
                 {
                     Logger.Log(LogLevel.Message,
-                        "KeyDownEvent: " + Enum.GetName(typeof(KeyCode), UnlockCursorBind.Value));
+                        "KeyDownEvent: " + NameOfKey(UnlockCursorBind.Value));
                     CameraFunction._current._unlockedCamera = true;
                     unlockedByUs = true;
                 }
                 else if (Input.GetKeyUp(UnlockCursorBind.Value) && unlockedByUs)
                 {
                     Logger.Log(LogLevel.Message,
-                        "KeyUpEvent: " + Enum.GetName(typeof(KeyCode), UnlockCursorBind.Value));
+                        "KeyUpEvent: " + NameOfKey(UnlockCursorBind.Value));
                     CameraFunction._current._unlockedCamera = false;
                     unlockedByUs = false;
                 }
@@ -76,6 +77,16 @@ namespace AtlyssUIShortcuts
             if (AtlyssNetworkManager._current._soloMode) return;
             if (PartyUIManager._current._partyObject != null) return;
             if (PartyUIManager._current._partyInviteElement.isEnabled == false) return;
+
+            if (!PartyUIManager._current._acceptInviteButton.GetComponentInChildren<TextMeshProUGUI>().text
+                    .Contains(NameOfKey(InviteAcceptBind.Value)))
+            {
+                PartyUIManager._current._acceptInviteButton.GetComponentInChildren<TextMeshProUGUI>().text +=
+                    String.Format("({})", NameOfKey(InviteAcceptBind.Value));
+                PartyUIManager._current._declineInviteButton.GetComponentInChildren<TextMeshProUGUI>().text +=
+                    String.Format("({})", NameOfKey(InviteDeclineBind.Value));
+            }
+            
             if (Input.GetKeyDown(InviteAcceptBind.Value)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.ACCEPTED);
             if (Input.GetKeyDown(InviteDeclineBind.Value)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.DECLINED);
 
@@ -127,6 +138,11 @@ namespace AtlyssUIShortcuts
             ConfigDefinition inviteDeclineDefinition = new ConfigDefinition("Keybinds", "InviteDeclineKeybind");
             ConfigDescription inviteDeclineDescription = new ConfigDescription("Decline Invite");
             InviteDeclineBind = Config.Bind(inviteDeclineDefinition, KeyCode.N, inviteDeclineDescription);
+        }
+
+        private string NameOfKey(KeyCode key)
+        {
+            return Enum.GetName(typeof(KeyCode), key);
         }
     }
 }
