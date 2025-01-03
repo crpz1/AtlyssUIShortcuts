@@ -6,7 +6,9 @@ Keybinds for UI actions such as accepting party invites.
 - Decline Party Invite: N
 - Unlock Mouse Cursor: Left Alt
 - Scroll Up/Down in World Portal to change selection (from version 1.1.0)
+- Configurable keybinds with EasySettings (optional) (from 1.2.0)
+- Shortcut prompt on invite UI (from 1.2.0)
 
 ## Future Features
-- Configurable keybinds
-- Shortcut prompt on invite UI
+- Keep last selected World Portal item
+- Retarget button
