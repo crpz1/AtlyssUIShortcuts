@@ -3,8 +3,8 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using JetBrains.Annotations;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AtlyssUIShortcuts
 {
@@ -22,6 +22,7 @@ namespace AtlyssUIShortcuts
         internal static ConfigEntry<KeyCode> InviteDeclineBind;
 
         public static bool unlockedByUs = false;
+        private string[] delimiters = new String[] { " (" };
         [CanBeNull] internal static AtlyssUIShortcuts instance;
 
         private void Awake()
@@ -78,15 +79,20 @@ namespace AtlyssUIShortcuts
             if (PartyUIManager._current._partyObject != null) return;
             if (PartyUIManager._current._partyInviteElement.isEnabled == false) return;
 
-            if (!PartyUIManager._current._acceptInviteButton.GetComponentInChildren<TextMeshProUGUI>().text
-                    .Contains(NameOfKey(InviteAcceptBind.Value)))
+            Text acceptText = PartyUIManager._current._acceptInviteButton.GetComponentInChildren<Text>();
+            Text declineText = PartyUIManager._current._declineInviteButton.GetComponentInChildren<Text>();
+
+            if (!acceptText.text.Contains($"({NameOfKey(InviteAcceptBind.Value)})"))
             {
-                PartyUIManager._current._acceptInviteButton.GetComponentInChildren<TextMeshProUGUI>().text +=
-                    String.Format("({})", NameOfKey(InviteAcceptBind.Value));
-                PartyUIManager._current._declineInviteButton.GetComponentInChildren<TextMeshProUGUI>().text +=
-                    String.Format("({})", NameOfKey(InviteDeclineBind.Value));
+                if (acceptText.text.Contains("("))
+                {
+                    acceptText.text = acceptText.text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[0];
+                    declineText.text = declineText.text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)[0];
+                }
+                acceptText.text += $" ({NameOfKey(InviteAcceptBind.Value)})";
+                declineText.text += $" ({NameOfKey(InviteDeclineBind.Value)})";
             }
-            
+
             if (Input.GetKeyDown(InviteAcceptBind.Value)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.ACCEPTED);
             if (Input.GetKeyDown(InviteDeclineBind.Value)) Player._mainPlayer.Cmd_SetPartyInviteCondition(PartyInviteStatus.DECLINED);
 
