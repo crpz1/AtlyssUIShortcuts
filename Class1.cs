@@ -107,15 +107,34 @@ namespace AtlyssUIShortcuts
 
             if (Input.mouseScrollDelta.y < 0)
             {
-                int nextIndex = zsm._worldPortal._selectedPortalEntry + 1;
+                var unlockedLocations = zsm._zoneSelectPrefabs.FindAll(entry => entry.activeSelf);
+                if (unlockedLocations.Count == 1) return;
+                bool foundCurrent = false;
+                //int nextIndex = zsm._worldPortal._selectedPortalEntry;
+
+                int currentIndex = unlockedLocations.FindIndex(entry => entry.GetComponent<ZoneSelectionEntry>()._dataID == zsm._worldPortal._selectedPortalEntry);
+                if (currentIndex + 1 >= unlockedLocations.Count) return;
+                int nextIndex = unlockedLocations[currentIndex + 1].GetComponent<ZoneSelectionEntry>()._dataID;
+
                 if (nextIndex > zsm._worldPortal._worldPortalSlots.Length - 1) return;
                 if (!Player._mainPlayer._waypointAttunements.Contains(zsm._worldPortal._worldPortalSlots[nextIndex]
                         ._mapLockID)) return;
+                if (nextIndex / 8 > zsm._worldPortal._selectedPortalEntry / 8) return;
                 zsm._zoneSelectPrefabs[nextIndex].GetComponent<ZoneSelectionEntry>().Select_Entry();
             } else if (Input.mouseScrollDelta.y > 0)
             {
                 if (zsm._worldPortal._selectedPortalEntry == 0) return;
-                zsm._zoneSelectPrefabs[zsm._worldPortal._selectedPortalEntry - 1].GetComponent<ZoneSelectionEntry>().Select_Entry();
+                var unlockedLocations = zsm._zoneSelectPrefabs.FindAll(entry => entry.activeSelf);
+                if (unlockedLocations.Count == 1) return;
+                int nextIndex = zsm._worldPortal._selectedPortalEntry;
+                int currentIndex = unlockedLocations.FindIndex(entry =>
+                    entry.GetComponent<ZoneSelectionEntry>()._dataID == zsm._worldPortal._selectedPortalEntry);
+                if (currentIndex == 0) return;
+                nextIndex = unlockedLocations[currentIndex - 1].GetComponent<ZoneSelectionEntry>()._dataID;
+                if (nextIndex / 8 < zsm._worldPortal._selectedPortalEntry / 8) return;
+                if (!Player._mainPlayer._waypointAttunements.Contains(zsm._worldPortal._worldPortalSlots[nextIndex]
+                        ._mapLockID)) return;
+                zsm._zoneSelectPrefabs[nextIndex].GetComponent<ZoneSelectionEntry>().Select_Entry();
             }
         }
 
