@@ -101,41 +101,34 @@ namespace AtlyssUIShortcuts
         private void HandleWorldPortalScroll()
         {
             if (WorldPortalScrollConfig.Value == false) return;
-            if (ZoneSelectionManager._current == null) return;
-            ZoneSelectionManager zsm = ZoneSelectionManager._current;
+            if (WorldPortalManager._current == null) return;
+            WorldPortalManager zsm = WorldPortalManager._current;
             if (!zsm._isOpen) return;
+            int currentIndex = zsm.CurrentWorldPortalSelection;
 
             if (Input.mouseScrollDelta.y < 0)
             {
-                var unlockedLocations = zsm._zoneSelectPrefabs.FindAll(entry => entry.activeSelf);
-                if (unlockedLocations.Count == 1) return;
-                bool foundCurrent = false;
-                //int nextIndex = zsm._worldPortal._selectedPortalEntry;
-
-                int currentIndex = unlockedLocations.FindIndex(entry => entry.GetComponent<ZoneSelectionEntry>()._dataID == zsm._worldPortal._selectedPortalEntry);
-                if (currentIndex + 1 >= unlockedLocations.Count) return;
-                int nextIndex = unlockedLocations[currentIndex + 1].GetComponent<ZoneSelectionEntry>()._dataID;
-
-                if (nextIndex > zsm._worldPortal._worldPortalSlots.Length - 1) return;
-                if (!Player._mainPlayer._waypointAttunements.Contains(zsm._worldPortal._worldPortalSlots[nextIndex]
-                        ._mapLockID)) return;
-                if (nextIndex / 8 > zsm._worldPortal._selectedPortalEntry / 8) return;
-                zsm._zoneSelectPrefabs[nextIndex].GetComponent<ZoneSelectionEntry>().Select_Entry();
+                if (currentIndex + 1 >= zsm._worldPortalEntries.Count)
+                {
+                    currentIndex = 0;
+                }
+                else
+                {
+                    currentIndex++;
+                }
             } else if (Input.mouseScrollDelta.y > 0)
             {
-                if (zsm._worldPortal._selectedPortalEntry == 0) return;
-                var unlockedLocations = zsm._zoneSelectPrefabs.FindAll(entry => entry.activeSelf);
-                if (unlockedLocations.Count == 1) return;
-                int nextIndex = zsm._worldPortal._selectedPortalEntry;
-                int currentIndex = unlockedLocations.FindIndex(entry =>
-                    entry.GetComponent<ZoneSelectionEntry>()._dataID == zsm._worldPortal._selectedPortalEntry);
-                if (currentIndex == 0) return;
-                nextIndex = unlockedLocations[currentIndex - 1].GetComponent<ZoneSelectionEntry>()._dataID;
-                if (nextIndex / 8 < zsm._worldPortal._selectedPortalEntry / 8) return;
-                if (!Player._mainPlayer._waypointAttunements.Contains(zsm._worldPortal._worldPortalSlots[nextIndex]
-                        ._mapLockID)) return;
-                zsm._zoneSelectPrefabs[nextIndex].GetComponent<ZoneSelectionEntry>().Select_Entry();
+                if (currentIndex == 0)
+                {
+                    currentIndex = zsm._worldPortalEntries.Count - 1;
+                }
+                else
+                {
+                    currentIndex--;
+                }
             }
+
+            zsm.CurrentWorldPortalSelection = currentIndex;
         }
 
         private void InitConfig()
